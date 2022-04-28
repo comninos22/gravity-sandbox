@@ -1,0 +1,53 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+
+    <title>Document</title>
+</head>
+
+<body>
+    <canvas id="canvas" width="4000" height="2200"></canvas>
+    <input type="range" min="1" step=".01" value="10" max="20" class="mass form-range" id="customRange3">
+    <input type="range" min=".01" step=".01" value="0.08" max="5" class="density form-range" id="customRange2">
+    <input type="range" min=".05" step=".01" value="1" max="2" class="scale form-range" id="customRange1">
+    <input type="checkbox" class="pause">
+    <input type="checkbox" class="leaveTraces">
+    <input type="checkbox" class="collisions">
+    <select class="tool-select form-select" aria-label="Default select example">
+        <option selected>Open this select menu</option>
+        <option value="0">Move tool</option>
+        <option value="1">Throw tool</option>
+    </select>
+    <button onclick="clearAll()">Clear</button>
+
+</body>
+<script src="../dist/bundle.js"></script>
+<style>
+    /* canvas {
+        width: 100%;
+        height:100%;
+        object-fit: contain;
+    } */
+    body {
+        background-color: #343a40;
+    }
+
+    input {
+        height: 200px;
+    }
+</style>
+<script>
+    function doStuff(elem) {
+        window.defaultSettings.mass = elem.value
+    }
+</script>
+
+</html>
