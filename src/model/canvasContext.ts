@@ -23,16 +23,19 @@ export class Canvas {
     private renderCallbacks: RenderCallback = {};
     private eventHandler: EventHandler
     private calcCB: number = 0;
+    private stack: [string][] = [];
     constructor(canvas: HTMLCanvasElement | null,) {
         this.settings = Settings.getInstance();
         this.toolHandler = new ToolManager(this);
         this.simulator = new Simulator();
         this.canvas = canvas;
         this.ctx = this.canvas?.getContext("2d");
+        this.ctx!.fillStyle = "white"
+        this.ctx!.strokeStyle = "white"
         let boundingRect: DOMRect = this.canvas!.getBoundingClientRect();
         this.width = boundingRect?.width ?? 0;
         this.height = boundingRect?.height ?? 0;
-        this.ctx!.strokeStyle = "white";
+
         this.paused = false;
         this.pausedByUser = false;
         this.eventHandler = new EventHandler(this);
@@ -44,6 +47,7 @@ export class Canvas {
         this.renderCallbacks = {};
     }
     start = () => {
+
         this.update();
         this.settings.subscribe(new Subscriber(this, "speed", this.refreshSimulation))
         this.refreshSimulation();
@@ -96,28 +100,33 @@ export class Canvas {
             this.ctx!.strokeStyle = "red"
             this.ctx?.arc(...p.getDisplayPos(), p.getDisplayRadius() * 10, 0, 2 * 3.14);
             this.ctx?.stroke()
+            this.ctx?.closePath()
         } catch (e) {
 
         }
     }
     renderLine = (speedLine: any) => {
         this.ctx?.beginPath();
+        this.ctx!.strokeStyle = "white"
+
         this.ctx?.moveTo(speedLine.x1, speedLine.y1);
         this.ctx?.lineTo(speedLine.x2, speedLine.y2);
         this.ctx?.stroke()
+        this.ctx?.closePath()
+
     }
 
     drawParticle = (p: RealObject) => {
         this.ctx?.beginPath();
-        this.ctx!.fillStyle = "white"
-        this.ctx!.strokeStyle = "white"
         this.ctx?.arc(...p.getDisplayPos(), p.getDisplayRadius(), 0, 2 * 3.14);
-        this.ctx?.stroke();
         this.ctx?.fill();
+        this.ctx?.closePath()
+
     }
 
     clear = () => {
-        this.ctx?.clearRect(0, 0, this.width, this.height)
+        let scale = this.settings.scale
+        this.ctx?.clearRect(0, 0, this.width / scale, this.height / scale)
     }
 
     determineOutOfBounds = (v: RealObject) =>
@@ -168,6 +177,19 @@ export class Canvas {
     }
     getRenderCallbacks() {
         return this.renderCallbacks
+    }
+    save() {
+        let state = {} as any
+        for (let property in this.ctx) {
+            if (property == 'canvas' || typeof this.ctx[property] == 'function') continue
+            state[property] = this.ctx[property]
+        }
+        this.stack.push(state)
+    }
+
+    restore() {
+        let state = this.stack.pop() || {}
+        for (let property in state) this.ctx![property] = state[property]
     }
 }
 

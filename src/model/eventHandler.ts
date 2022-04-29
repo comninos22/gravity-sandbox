@@ -19,6 +19,16 @@ export class EventHandler {
         this.attachEvents();
     }
     attachEvents() {
+        window.onresize = () => {
+            let rect = document.body.getBoundingClientRect();
+            let canvas = document.querySelector("canvas");
+            let width = (rect.width)
+            this.canvas!.save();
+            canvas!.setAttribute("width", rect.width.toString())
+            canvas!.setAttribute("height", rect.height.toString())
+            this.canvas!.restore();
+        }
+        window.dispatchEvent(new Event("resize"))
         for (let eventType of this.eventNames) {
             document.querySelector("canvas")?.addEventListener(eventType, this.switchEventType)
         }
@@ -31,9 +41,7 @@ export class EventHandler {
             Settings.getInstance().setDensity(+(event.target as HTMLInputElement).value)
         })
         document.querySelector("input.speed")!.addEventListener("change", (event) => {
-            console.log(Settings.getInstance().getSpeed())
             Settings.getInstance().setSpeed(Math.pow(10, +(event.target as HTMLInputElement).value))
-            console.log(Settings.getInstance().getSpeed())
 
         })
 
@@ -54,14 +62,7 @@ export class EventHandler {
         document.querySelector("input.pause")!.addEventListener("click", (event) => {
             this.canvas.togglePause(true);
         })
-        window.onresize = () => {
-            let rect = document.body.getBoundingClientRect();
-            let canvas = document.querySelector("canvas");
-            let width = (rect.width )
-            canvas!.setAttribute("width", width.toString())
-            canvas!.setAttribute("height", (width * .35).toString())
-        }
-        window.dispatchEvent(new Event("resize"))
+
     }
 
     getCanvas() {

@@ -6,14 +6,20 @@ export class Simulator {
     private particles: Array<RealObject> = []
     private settings: Settings = Settings.getInstance();
     private destroyedParticles: Dictionary = {}
+    private particleLength: number = 0;
+    private atLeastOneDestroyed = false
     simulate() {
         this.destroyedParticles = {}
         let G = this.settings.cosmicConstant
-        for (let p1 of this.particles) {
+        let length = this.particleLength;
+        this.atLeastOneDestroyed = false
+        for (let i = 0; i < this.particleLength; i++) {
+            let p1 = this.particles[i]
             let [x1, y1] = p1.getPos();
             let r1 = p1.getRadius()
             let m1 = p1.getMass()
-            for (let p2 of this.particles) {
+            for (let j = 0; j < this.particleLength; j++) {
+                let p2 = this.particles[j]
                 if (p1 != p2) {
                     //Distance between 2 points
                     //let distance: number = this.getDistance(p1, p2);
@@ -29,7 +35,7 @@ export class Simulator {
                 }
             }
         }
-        this.filterParticles((v: RealObject) => !(v.id in this.destroyedParticles));
+        this.atLeastOneDestroyed && this.filterParticles((v: RealObject) => !(v.id in this.destroyedParticles));
         for (let particle of this.particles) particle.tick()
     }
 
@@ -38,6 +44,8 @@ export class Simulator {
     }
     setParticles(p: Array<RealObject>) {
         this.particles = p;
+        this.particleLength = this.particles.length
+
     }
     getParticles() {
         return this.particles;
@@ -61,6 +69,7 @@ export class Simulator {
     }
     setDestroyed(p1: RealObject) {
         this.destroyedParticles[p1.id] = p1;
+        this.atLeastOneDestroyed = true;
     }
 
 }

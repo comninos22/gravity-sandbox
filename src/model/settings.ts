@@ -22,7 +22,7 @@ export class Settings {
         return Settings.instance;
     }
     setSpeed(sp: number) {
-        if (sp >= 0 && sp <= 1000) this.speed = sp 
+        if (sp >= 0 && sp <= 1000) this.speed = sp
         else throw new Error("Invalid speed value")
         this.notify("speed");
     }
@@ -48,8 +48,8 @@ export class Settings {
         this.cosmicConstant = cosmicConstant;
     }
     clearTransform = () => {
-        this.transformY = (this.canvasHeight * this.scale)
-        this.transformX = (this.canvasWidth * this.scale)
+        this.transformY = (this.canvasHeight / this.scale)
+        this.transformX = (this.canvasWidth / this.scale)
     }
     setTransformY(y: number) {
         this.transformY += y;
@@ -60,21 +60,11 @@ export class Settings {
     getTransform() {
         return [this.transformX, this.transformY]
     }
-    toggleTracing = () => {
-        if (this.leavesTracing) {
-            this.setTracing(false);
-        } else {
-            this.setTracing(true);
-        }
-    }
-    toggleCollisions = () => {
-        if (this.hasCollisions) {
-            this.setCollision(false);
-        } else {
-            this.setCollision(true);
-        }
-    }
-    getSpeed=()=>{
+    toggleTracing = () => this.setTracing(!this.leavesTracing);
+    toggleCollisions = () => this.setCollision(!this.hasCollisions);
+
+
+    getSpeed = () => {
         return this.speed
     }
     subscribe(subscriber: Subscriber) {
