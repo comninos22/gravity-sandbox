@@ -37,6 +37,9 @@ export class RealObject {
     public applySpeedDelta(delta: UV) {
         this.speed.increaseWith(delta);
     }
+    public setSpeed(speed: UV) {
+        this.speed = (speed);
+    }
     public getSpeed() {
         return this.speed;
     }

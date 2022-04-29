@@ -28,7 +28,7 @@ export class GeneralTool implements Tool {
     }
     getKeyboardFunctionsAndKeyCodes(e: EventHandler): [string, Function][] {
         return [
-            ['Space', e.canvas.togglePause],
+            ['Space', e.canvas.togglePause.bind(null, true)],
             ['KeyC', this.settings.clearTransform],
             ['KeyR', e.canvas.clearParticles],
             ['KeyT', this.settings.toggleTracing],

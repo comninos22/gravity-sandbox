@@ -94,11 +94,11 @@ export class ToolManager {
 
     }
     private handleWheel(e: EventHandler) {
-        this.canvas.pause()
+        !this.canvas.isPausedByUser() && this.canvas.pause()
         this.canvas.clear();
         this.settings.setScale(this.settings.scale - (100 * this.settings.scale / (e.currentEvent as WheelEvent).deltaY))
         this.canvas.setParticles(this.canvas.getParticles());
-        this.canvas.continue(true);
+        !this.canvas.isPausedByUser() && this.canvas.continue();
     }
     private handleKeyDown(e: EventHandler) {
         let event = e.currentEvent as KeyboardEvent;

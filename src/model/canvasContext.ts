@@ -40,6 +40,9 @@ export class Canvas {
         this.pausedByUser = false;
         this.eventHandler = new EventHandler(this);
     }
+    isPausedByUser() {
+        return this.pausedByUser
+    }
     getToolHandler = () => {
         return this.toolHandler;
     }

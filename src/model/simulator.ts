@@ -59,8 +59,8 @@ export class Simulator {
         let afterImpactMagnitude = Math.sqrt((bigger.getKineticEnergy() + smaller.getKineticEnergy()) / newMass)
         afterImpactMagnitude *= this.settings.heatConversionPercentage
         let newSpeed = UV.addVectors(
-            ...bigger.getSpeed().getCoefficients(),
-            ...smaller.getSpeed().getCoefficients()
+            ...bigger.getMomentum().getCoefficients(),
+            ...smaller.getMomentum().getCoefficients()
         ).multiply(afterImpactMagnitude)
         bigger.setMass(newMass);
         bigger.applySpeedDelta(newSpeed);
