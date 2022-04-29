@@ -14,10 +14,10 @@ export class ThrowTool implements Tool {
     }
 
     dragCommand(e: EventHandler): void {
-        delete e.canvas.renderCallbacks['line']
+        delete e.canvas.getRenderCallbacks()['line']
         let event = e.currentEvent as MouseEvent;
         this.setSpeedLine(e.prevClientX, e.prevClientY, event.clientX, event.clientY)
-        e.canvas.renderCallbacks['line'] = e.canvas.renderLine.bind(null, this.speedLine);
+        e.canvas.getRenderCallbacks()['line'] = e.canvas.renderLine.bind(null, this.speedLine);
     };
 
     clickCommand(e: EventHandler): void { };
@@ -41,7 +41,7 @@ export class ThrowTool implements Tool {
             ]
         );
         console.log(e.canvas.getParticles())
-        delete e.canvas.renderCallbacks['line']
+        delete e.canvas.getRenderCallbacks()['line']
     };
     getShortcut(): string {
         return "Digit2"

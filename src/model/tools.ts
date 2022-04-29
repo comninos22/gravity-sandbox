@@ -5,6 +5,8 @@ import { EventHandler } from "./eventHandler";
 import { GeneralTool } from "./tools/generalTool";
 import { MoveTool } from "./tools/moveTool"
 import { ThrowTool } from "./tools/throwTool"
+import { SelectTool } from "./tools/selectTool"
+import { Canvas } from "./canvasContext";
 
 export interface Tool {
     clickCommand(e: EventHandler): void;
@@ -20,13 +22,16 @@ export class ToolManager {
     private selectedTool: Tool;
     private allTools: Array<Tool>;
     settings: Settings;
-    constructor(tool: Tool = new MoveTool()) {
+    canvas: Canvas;
+    constructor(canvas: Canvas, tool: Tool = new MoveTool()) {
         this.settings = Settings.getInstance();
+        this.canvas = canvas;
         this.selectedTool = tool;
         this.allTools = [
             new GeneralTool,
             new MoveTool,
             new ThrowTool,
+            new SelectTool
         ]
         this.checkShortCuts();
     }
@@ -89,11 +94,11 @@ export class ToolManager {
 
     }
     private handleWheel(e: EventHandler) {
-        e.canvas.pause()
-        e.canvas.clear();
+        this.canvas.pause()
+        this.canvas.clear();
         this.settings.setScale(this.settings.scale - (100 * this.settings.scale / (e.currentEvent as WheelEvent).deltaY))
-        e.canvas.setParticles(e.canvas.getParticles());
-        e.canvas.continue(true);
+        this.canvas.setParticles(this.canvas.getParticles());
+        this.canvas.continue(true);
     }
     private handleKeyDown(e: EventHandler) {
         let event = e.currentEvent as KeyboardEvent;
@@ -103,6 +108,7 @@ export class ToolManager {
         for (let tool of this.allTools) {
             console.log(tool.getShortcut(), event.code)
             if (tool.getShortcut() == event.code) {
+                this.canvas.clearRenderCallbacks()
                 this.selectedTool = tool;
                 return;
             }

@@ -73,7 +73,7 @@ export class RealObject {
 
     public setMass(mass: number) {
         this.mass = mass;
-        this.volume = this.mass / this.density;
+        this.volume = this.mass * this.density;
         this.radius = Math.pow(this.volume / ((4 / 3) * 3.14), 1 / 3);
     }
 
@@ -94,9 +94,7 @@ export class RealObject {
     }
 
     getMomentum() {
-        console.log(this.speed);
         let momentum = this.speed.clone().multiply(1 / this.mass)
-        console.log(this.speed);
         return momentum
     }
     getKineticEnergy() {

@@ -16,8 +16,8 @@
 <body>
     <canvas id="canvas" width="4000" height="2200"></canvas>
     <input type="range" min="1" step=".01" value="10" max="20" class="mass form-range" id="customRange3">
-    <input type="range" min=".01" step=".01" value="0.08" max="5" class="density form-range" id="customRange2">
-    <input type="range" min=".05" step=".01" value="1" max="2" class="scale form-range" id="customRange1">
+    <input type="range" min=".01" step=".01" value="5" max="5" class="density form-range" id="customRange2">
+    <input type="range" min="0" step=".01" value="1" max="2" class="speed form-range" id="customRange1">
     <input type="checkbox" class="pause">
     <input type="checkbox" class="leaveTraces">
     <input type="checkbox" class="collisions">
@@ -45,9 +45,7 @@
     }
 </style>
 <script>
-    function doStuff(elem) {
-        window.defaultSettings.mass = elem.value
-    }
+    
 </script>
 
 </html>

@@ -1,16 +1,69 @@
 import { Canvas } from "./canvasContext";
+import { Settings } from "./settings";
 import { ToolManager } from "./tools";
 import { Utils } from "./utils";
 export class EventHandler {
     public canvas: Canvas;
+    private allEvents = "click mousedown mouseup focus blur keydown change dblclick mousemove mouseover mouseout mousewheel keydown keyup keypress textInput touchstart touchmove touchend touchcancel resize scroll zoom select change submit reset";
+    private eventNames: Array<string>
     private clickDown = false;
     private clickMoving = false;
     public prevClientX = 0;
     public prevClientY = 0;
     public currentEvent: Event | null = null;
+    private settings: Settings;
     constructor(canvas: Canvas) {
+        this.settings = Settings.getInstance()
+        this.eventNames = this.allEvents.split(" ")
         this.canvas = canvas;
+        this.attachEvents();
     }
+    attachEvents() {
+        for (let eventType of this.eventNames) {
+            document.querySelector("canvas")?.addEventListener(eventType, this.switchEventType)
+        }
+        document.querySelector("body")?.addEventListener("keydown", this.switchEventType)
+        document.querySelector("body")?.addEventListener("wheel", this.switchEventType)
+        document.querySelector("input.mass")!.addEventListener("change", (event) => {
+            Settings.getInstance().setMass(Math.pow(10, +(event.target as HTMLInputElement).value))
+        })
+        document.querySelector("input.density")!.addEventListener("change", (event) => {
+            Settings.getInstance().setDensity(+(event.target as HTMLInputElement).value)
+        })
+        document.querySelector("input.speed")!.addEventListener("change", (event) => {
+            console.log(Settings.getInstance().getSpeed())
+            Settings.getInstance().setSpeed(Math.pow(10, +(event.target as HTMLInputElement).value))
+            console.log(Settings.getInstance().getSpeed())
+
+        })
+
+        document.querySelector(".collisions")!.addEventListener("click", (event) => {
+            if (this.settings.hasCollisions) {
+                this.settings.setCollision(false);
+            } else {
+                this.settings.setCollision(true);
+            }
+        })
+        document.querySelector(".leaveTraces")!.addEventListener("click", (event) => {
+            if (this.settings.leavesTracing) {
+                this.settings.setTracing(false);
+            } else {
+                this.settings.setTracing(true);
+            }
+        })
+        document.querySelector("input.pause")!.addEventListener("click", (event) => {
+            this.canvas.togglePause(true);
+        })
+        window.onresize = () => {
+            let rect = document.body.getBoundingClientRect();
+            let canvas = document.querySelector("canvas");
+            let width = (rect.width )
+            canvas!.setAttribute("width", width.toString())
+            canvas!.setAttribute("height", (width * .35).toString())
+        }
+        window.dispatchEvent(new Event("resize"))
+    }
+
     getCanvas() {
         return this.canvas;
     }
@@ -20,7 +73,7 @@ export class EventHandler {
     isDragging() {
         return this.clickDown && this.clickMoving
     }
-    switchEventType(e: Event) {
+    switchEventType = (e: Event) => {
         this.currentEvent = e;
         switch (e.type.toLowerCase()) {
             case "mousedown":

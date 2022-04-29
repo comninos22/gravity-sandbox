@@ -10,6 +10,8 @@ export class Settings {
     hasCollisions: boolean = true;
     leavesTracing: boolean = false;
     heatConversionPercentage: number = .5;
+    private speed: number = 10;
+    subscribers: Array<Subscriber> = [];
     private static instance: Settings;
     private constructor() {
     }
@@ -18,6 +20,11 @@ export class Settings {
             Settings.instance = new this();
         }
         return Settings.instance;
+    }
+    setSpeed(sp: number) {
+        if (sp >= 0 && sp <= 1000) this.speed = sp 
+        else throw new Error("Invalid speed value")
+        this.notify("speed");
     }
     setImpactHeatConversion(percentage: number) {
         this.heatConversionPercentage = percentage;
@@ -54,7 +61,6 @@ export class Settings {
         return [this.transformX, this.transformY]
     }
     toggleTracing = () => {
-        console.log("hello")
         if (this.leavesTracing) {
             this.setTracing(false);
         } else {
@@ -67,5 +73,27 @@ export class Settings {
         } else {
             this.setCollision(true);
         }
+    }
+    getSpeed=()=>{
+        return this.speed
+    }
+    subscribe(subscriber: Subscriber) {
+        this.subscribers.push(subscriber);
+    }
+    notify(prop: string) {
+        for (let sub of this.subscribers) {
+            sub.key == prop && sub.callback((this as any)[prop]);
+        }
+    }
+}
+
+export class Subscriber {
+    subscriber: any;
+    key: string;
+    callback: Function;
+    constructor(sub: any, key: string, cb: Function) {
+        this.subscriber = sub
+        this.key = key;
+        this.callback = cb
     }
 }
